@@ -1,6 +1,8 @@
 package com.devscode.simplerestaplication.dependencyInyection
 
 import com.devscode.simplerestaplication.datasource.RestDataSource
+import com.devscode.simplerestaplication.repository.UserRepository
+import com.devscode.simplerestaplication.repository.UserRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,24 +15,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class DataSourceModel {
+abstract class RepositoryModule {
 
     @Singleton
     @Provides
     @Named("BaseUrl")
-    fun provideBaseUrl() = "https://randomuser.me/api/"
+   abstract fun UserRepository(repo:UserRepositoryImp) : UserRepository
 
-    @Singleton
-    @Provides
-    fun provideRetrofit(@Named("BaseUrl") baseUrl: String): Retrofit {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(baseUrl)
-            .build()
-    }
-
-    @Singleton
-    @Provides
-    fun restDataSource(retrofit: Retrofit):RestDataSource =
-        retrofit.create(RestDataSource::class.java)
 }
